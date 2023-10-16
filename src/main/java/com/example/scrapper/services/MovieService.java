@@ -8,5 +8,5 @@ import com.example.scrapper.models.entity.Movie;
 
 @Service
 public interface MovieService {
-    Iterable<Movie> scrapperItem(String uri) throws IOException;
+    Iterable<Movie> scrapperMovie(String uri) throws IOException;
 }

@@ -19,24 +19,30 @@ public class MovieServiceImpl implements MovieService {
     private MovieRepo movieRepo;
 
     @Override
-    public Iterable<Movie> scrapperItem(String uri) throws IOException {
-        org.jsoup.nodes.Document document = Jsoup.connect(uri).get();
-        List<Movie> movies = new ArrayList<>();
+    public Iterable<Movie> scrapperMovie(String uri) throws IOException {
+        try {
+            org.jsoup.nodes.Document document = Jsoup.connect(uri).get();
+            List<Movie> movies = new ArrayList<>();
 
-        for (org.jsoup.nodes.Element row : document.select("li.ipc-metadata-list-summary-item")) {
-            UUID uuid = UUID.randomUUID();
-            final String id = uuid.toString();
-            final String title = row.select("h3.ipc-title__text").text();
-            final String titleWithoutNumber = title.replaceFirst("^\\d+\\.\\s*", "");
-            final String rating = row.select("span.ratingGroup--imdb-rating").text();
+            for (org.jsoup.nodes.Element row : document.select("li.ipc-metadata-list-summary-item")) {
+                UUID uuid = UUID.randomUUID();
+                final String id = uuid.toString();
+                final String title = row.select("h3.ipc-title__text").text();
+                final String titleWithoutNumber = title.replaceFirst("^\\d+\\.\\s*", "");
+                final String rating = row.select("span.ratingGroup--imdb-rating").text();
 
-            movies.add(new Movie(id, titleWithoutNumber, rating));
-        }
+                movies.add(new Movie(id, titleWithoutNumber, rating));
+            }
 
-        if(movies != null){
-            return movies;
-        }else{
-            return Collections.emptyList();
+            if (!movies.isEmpty()) {
+//                movieRepo.saveAll(movies);
+                return movies;
+            } else {
+                return Collections.emptyList();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException("Failed to scrape data from the provided URI");
         }
     }
 }
