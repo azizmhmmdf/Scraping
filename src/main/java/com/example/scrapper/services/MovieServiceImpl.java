@@ -2,7 +2,6 @@ package com.example.scrapper.services;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +21,7 @@ public class MovieServiceImpl implements MovieService {
   private MovieRepo movieRepo;
 
   @Override
-  public Iterable<Movie> scrapperMovie(String uri) throws IOException {
+  public Iterable<Movie> scrapperMovie(String uri) throws Exception {
       try {
         org.jsoup.nodes.Document document = Jsoup.connect(uri).get();
         List<Movie> movies = new ArrayList<>();
@@ -47,10 +46,12 @@ public class MovieServiceImpl implements MovieService {
       } catch (IOException e) {
         e.printStackTrace();
         throw new IOException("Failed to scrape data from the provided URI");
+      }finally {
+        throw new Exception();
       }
     }
 
-  public void saveMoviesToCsv(List<Movie> movies, String filename){
+  public void saveMoviesToCsv(List<Movie> movies, String filename) throws Exception{
     try(CSVWriter writer = new CSVWriter(new FileWriter(filename))) {
       String[] header = { "ID", "TITLE", "RATING" };
       writer.writeNext(header);

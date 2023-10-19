@@ -17,7 +17,7 @@ public class MovieController {
     private MovieServiceImpl itemService;
 
     @GetMapping
-    public Iterable<Movie> scrapper() throws IOException{
+    public Iterable<Movie> scrapper() throws Exception{
         final String uri = "https://www.imdb.com/chart/top/";
         return itemService.scrapperMovie(uri);
     }
